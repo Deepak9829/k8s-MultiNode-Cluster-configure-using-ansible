@@ -1,0 +1,30 @@
+- hosts: kube-Master 
+  tasks:
+  - name: Launching WordPress App Deployment 
+    shell: "kubectl run wp  --image=wordpress:5.1.1-php7.3-apache"
+    register: wp
+
+  - debug:
+     var: wp.stdout_lines
+
+  - name: Launching MySQL Database Deployment For WordPress
+    shell: "kubectl run mydb --image=mysql:5.7 --env=MYSQL_ROOT_PASSWORD=redhat --env=MYSQL_DATABASE=wpdb  --env=MYSQL_USER=onkar  --env=MYSQL_PASSWORD=redhat"
+    register: sql
+
+  - debug:
+     var: sql.stdout_lines
+
+  - name: Exposing wordpess Deployment
+    shell: "kubectl expose pod wp --type=NodePort --port=80"
+    register: expose
+    ignore_errors: yes
+
+  - debug: 
+     var: expose.stdout_lines
+
+  - name: Showing K8S Services
+    shell: "kubectl get svc"
+    register: svc
+
+  - debug:
+     var: svc.stdout_lines

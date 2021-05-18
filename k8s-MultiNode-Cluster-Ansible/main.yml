@@ -1,0 +1,116 @@
+- hosts: localhost
+  tasks:
+  - name: Launch Instance for Master Node        
+    ec2_instance:
+      region: ap-south-1
+      image_id: ami-010aff33ed5991201
+      instance_type: t2.micro
+      vpc_subnet_id: subnet-58006b14
+      security_group: sg-0b95bb3ac255536c1
+      name: Master-k
+      key_name: hadoop-key 
+      state: present
+      aws_access_key: AKIASRLH2K35KTHL3MFT
+      aws_secret_key: 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
+    register: ec2_Master
+  
+  - name: "Updating inventory for Master Node..."
+    blockinfile:
+      path: "/root/inventory.txt"
+      block: |
+        [kube-Master]
+        {{ec2_Master['instances'][0]['public_ip_address']}}
+      marker: ""
+
+  
+ 
+  - name: Launch Instance for Slave Node1
+    ec2_instance:
+      region: ap-south-1
+      image_id: ami-010aff33ed5991201
+      instance_type: t2.micro
+      vpc_subnet_id: subnet-58006b14
+      security_group: sg-0b95bb3ac255536c1
+      key_name: hadoop-key
+      name: KSlave1
+      state: present
+      aws_access_key: AKIASRLH2K35KTHL3MFT
+      aws_secret_key: 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
+    register: ec2_Slave1
+
+  - name: "Updating inventory for Master Node..."
+    blockinfile:
+      path: "/root/inventory.txt"
+      block: |
+        [kube-Slave1]
+        {{ec2_Slave1['instances'][0]['public_ip_address']}}
+      marker: ""  
+
+
+  - name: Launch Instance for Slave Node2
+    ec2_instance:
+      region: ap-south-1
+      image_id: ami-010aff33ed5991201
+      instance_type: t2.micro
+      vpc_subnet_id: subnet-58006b14
+      security_group: sg-0b95bb3ac255536c1
+      key_name: hadoop-key
+      name: KSlave2
+      state: present
+      aws_access_key: AKIASRLH2K35KTHL3MFT
+      aws_secret_key: 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
+    register: ec2_Slave2
+
+  - name: "Updating inventory for Master Node..."
+    blockinfile:
+      path: "/root/inventory.txt"
+      block: |
+        [kube-Slave2]
+        {{ec2_Slave2['instances'][0]['public_ip_address']}}
+      marker: ""
+
+  
+- hosts: kube-Master
+  tasks:
+  - name: Install Docker Engine
+    package:
+      name: "docker"
+      state: present
+
+
+  - name: Start Docker Engine
+    service:
+       name: "docker"
+       state: started
+
+       
+  - name: Configuring YUM Repo For K8S Services
+    yum_repository:
+      name: kubernetes
+      description: kubernetes repo
+      baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+      gpgcheck: 1
+      repo_gpgcheck: 1
+      enabled: 1
+      gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    register: a
+    changed_when: false
+
+
+  - name: Install Kubeadm software..
+    shell:
+       cmd: yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+    ignore_errors: yes
+  
+  - name: Start kubelet Service
+    service:
+        name: "kubelet"
+        state: started
+
+  - name: Download the required container images from kubeadm centralise repository
+    shell:
+       cmd: kubeadm config images pull
+    ignore_errors: yes
+
+
+  

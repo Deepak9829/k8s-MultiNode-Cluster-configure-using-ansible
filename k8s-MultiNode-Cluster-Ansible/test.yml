@@ -1,0 +1,9 @@
+- hosts: localhost
+  vars_prompt:
+  - name: username
+    prompt: "What is your username"
+    private: no
+     
+  tasks:
+  - debug:
+      msg: "{{username}}"
