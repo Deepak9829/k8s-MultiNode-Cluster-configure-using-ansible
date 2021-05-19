@@ -8,7 +8,7 @@
      var: wp.stdout_lines
 
   - name: Launching MySQL Database Deployment For WordPress
-    shell: "kubectl run mydb --image=mysql:5.7 --env=MYSQL_ROOT_PASSWORD=redhat --env=MYSQL_DATABASE=wpdb  --env=MYSQL_USER=onkar  --env=MYSQL_PASSWORD=redhat"
+    shell: "kubectl run mydb --image=mysql:5.7 --env=MYSQL_ROOT_PASSWORD=redhat --env=MYSQL_DATABASE=wpdb  --env=MYSQL_USER=deepak  --env=MYSQL_PASSWORD=redhat"
     register: sql
 
   - debug:
