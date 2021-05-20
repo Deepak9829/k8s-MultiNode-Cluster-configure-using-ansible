@@ -77,7 +77,7 @@
 
   - name: Configure Master or initialize master node
     shell:
-       cmd: "kubeadm init --pod-network-cidr=10.240.0.0/16 --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem"
+       cmd: "kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem"
 
 
   
