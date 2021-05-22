@@ -10,8 +10,8 @@
       name: Master-k
       key_name: hadoop-key
       state: present
-      aws_access_key: AKIASRLH2K35KTHL3MFT
-      aws_secret_key: vy3H6nMBrdwn8yKZRFqTr1EcWXkXKSUfJ78HL2+2
+      aws_access_key: use your own access & Secret key
+      aws_secret_key: use your own access & Secret key
     register: ec2_Master
 
   - name: "Updating inventory for Master Node..."
@@ -34,8 +34,8 @@
       key_name: hadoop-key
       name: KSlave1
       state: present
-      aws_access_key: AKIASRLH2K35KTHL3MFT
-      aws_secret_key: vy3H6nMBrdwn8yKZRFqTr1EcWXkXKSUfJ78HL2+2
+      aws_access_key: use your own access & Secret key
+      aws_secret_key: use your own access & Secret key
     register: ec2_Slave1
 
   - name: Launch Instance for Slave Node2
@@ -48,8 +48,8 @@
       key_name: hadoop-key
       name: KSlave2
       state: present
-      aws_access_key: AKIASRLH2K35KTHL3MFT
-      aws_secret_key: vy3H6nMBrdwn8yKZRFqTr1EcWXkXKSUfJ78HL2+2
+      aws_access_key: use your own access & Secret key
+      aws_secret_key: use your own access & Secret key
     register: ec2_Slave2
 
   - name: "Updating inventory for Master Node..."
